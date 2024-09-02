@@ -117,6 +117,10 @@ function World(_ts) constructor {
                 if (_tile_info != noone) {
                     var _autotile_index = get_autotile_index(_i, _j);
                     draw_sprite(_tileset, _autotile_index, round(_i * _tile_size + _tile_size / 2), round(_j * _tile_size + _tile_size / 2));
+					//show_message(_tile_info);
+					if(_tile_info.grass) {
+						 draw_sprite(_tileset, 24, round(_i * _tile_size + _tile_size / 2), round(_j * _tile_size + _tile_size / 2));
+					}
                 } else {
                     if (_j > 0 && _world_grid[# _i, _j-1] != noone) {
                         var _wave_pos = (_wave_up) ? 16 : 17;
@@ -180,43 +184,57 @@ function World(_ts) constructor {
         return 14;
     }
 
-	function generate_chunk(_start_x, _start_y) {
-        var _chunk_size = 6;
-        var _noise_seed = random(10000); // Random seed for varied chunks
-        
-        // Calculate the center of the chunk
-        var _center_x = _start_x + _chunk_size / 2;
-        var _center_y = _start_y + _chunk_size / 2;
-        
-        for (var _i = 0; _i < _chunk_size; _i++) {
-            for (var _j = 0; _j < _chunk_size; _j++) {
-                var _grid_x = _start_x + _i;
-                var _grid_y = _start_y + _j;
-                
+function generate_chunk(_start_x, _start_y) {
+    var _chunk_size = 6;
+    var _noise_seed = random(10000); // Random seed for varied chunks
+    
+    // Calculate the center of the chunk
+    var _center_x = _start_x + _chunk_size / 2;
+    var _center_y = _start_y + _chunk_size / 2;
+    
+    // First pass: Fill the entire chunk with land
+    for (var _i = 0; _i < _chunk_size; _i++) {
+        for (var _j = 0; _j < _chunk_size; _j++) {
+            var _grid_x = _start_x + _i;
+            var _grid_y = _start_y + _j;
+            
+            _draw_grass_tile = random_range(1, 100) < 20;
+            _world_grid[# _grid_x, _grid_y] = {
+                type: "land",
+                grass: _draw_grass_tile,
+            };
+        }
+    }
+    
+    // Second pass: Create water only along the edges
+    for (var _i = 0; _i < _chunk_size; _i++) {
+        for (var _j = 0; _j < _chunk_size; _j++) {
+            var _grid_x = _start_x + _i;
+            var _grid_y = _start_y + _j;
+            
+            // Check if we're on the edge of the chunk
+            if (_i == 0 || _i == _chunk_size - 1 || _j == 0 || _j == _chunk_size - 1) {
                 // Calculate distance from center
-                var dist_from_center = point_distance(_grid_x, _grid_y, _center_x, _center_y) / (_chunk_size / 2);
+                var _dist_from_center = point_distance(_grid_x, _grid_y, _center_x, _center_y) / (_chunk_size / 2);
                 
                 // Generate Perlin noise value
                 var _noise_x = (_grid_x + _noise_seed) * _noise_scale;
                 var _noise_y = (_grid_y + _noise_seed) * _noise_scale;
-                var _noise_value = (perlin_noise_2d(_noise_x, _noise_y) + 1) / 2; // Normalize to 0-1 range
+                var _noise_value = (perlin_noise_2d(_noise_x, _noise_y) + 2) / 2; // Normalize to 0-1 range
                 
                 // Combine distance and noise to determine land or water
-                var _land_value = _noise_value - dist_from_center;
+                var _land_value = _noise_value - _dist_from_center;
                 
-                if (_land_value > 0.0001) { // Adjust this threshold to change island size
-                    _world_grid[# _grid_x, _grid_y] = {
-                        type: "land"
-                    };
-                } else {
+                if (_land_value <= 0.1) { // Adjust this threshold to change coastline shape
                     _world_grid[# _grid_x, _grid_y] = noone; // Water
                 }
             }
         }
-        
-        // Ensure the center is always land
-        _world_grid[# floor(_center_x), floor(_center_y)] = { type: "land" };
     }
+    
+    // Ensure the center is always land
+    _world_grid[# floor(_center_x), floor(_center_y)] = { type: "land", grass: false };
+}
 	
 	function perlin_noise_2d(_x, _y) {
 	    static p = array_create(512);
