@@ -1,0 +1,1 @@
+game_world.draw_world(true);
