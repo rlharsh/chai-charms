@@ -36,26 +36,35 @@ function World(_ts) constructor {
 		_start_pos_x = _start_x;
 		_start_pos_y = _start_y;
     
-        generate_chunk(_start_x, _start_y);
+        generate_chunk(18, 6);
     }
 	
-    function update_world() {
-        var _cell_size = 6 * _tile_size;
-        var _mouse_x = device_mouse_x_to_gui(0);
-        var _mouse_y = device_mouse_y_to_gui(0);
-    
-        var _cell_x = _mouse_x div _cell_size;
-        var _cell_y = _mouse_y div _cell_size;
-    
-        if (_mouse_x >= 0 && _mouse_x < room_width && _mouse_y >= 0 && _mouse_y < room_height) {
-            if (mouse_check_button_pressed(mb_left)) {
-                var _start_x = _cell_x * 6;
-                var _start_y = _cell_y * 6;
-            
-                generate_chunk(_start_x, _start_y);
-            }
-        }
-    }
+	function update_world() {
+	    var _cell_size = 6 * _tile_size;
+	    var _mouse_x = mouse_x;
+	    var _mouse_y = mouse_y;
+
+	    // Get the current viewport information
+	    var _cam = view_camera[0];
+	    var _view_x = camera_get_view_x(_cam);
+	    var _view_y = camera_get_view_y(_cam);
+	    var _view_height = camera_get_view_height(_cam);
+
+	    var _cell_x = _mouse_x div _cell_size;
+	    var _cell_y = _mouse_y div _cell_size;
+
+	    // Check if the mouse is within the valid area of the current viewport
+	    var _mouse_view_y = _mouse_y - _view_y;
+	    if (_mouse_x >= 0 && _mouse_x < room_width && 
+	        _mouse_view_y >= 96 && _mouse_view_y < _view_height - 96) {
+	        if (mouse_check_button_pressed(mb_left)) {
+	            var _start_x = _cell_x * 6;
+	            var _start_y = _cell_y * 6;
+        
+	            generate_chunk(_start_x, _start_y);
+	        }
+	    }
+	}
     
     function draw_world(_draw_grid) {
         draw_grid_overlay(_draw_grid);
@@ -64,16 +73,24 @@ function World(_ts) constructor {
     }
 	
 	function draw_mouse_grid() {
-	    var _cell_size = 6 * _tile_size; // 96 pixels if _tile_size is 16
-	    var _mouse_x = device_mouse_x_to_gui(0);
-	    var _mouse_y = device_mouse_y_to_gui(0);
+	    var _cell_size = 6 * _tile_size;
+	    var _mouse_x = mouse_x;
+	    var _mouse_y = mouse_y;
+    
+	    // Get the current viewport information
+	    var _cam = view_camera[0];
+	    var _view_x = camera_get_view_x(_cam);
+	    var _view_y = camera_get_view_y(_cam);
+	    var _view_height = camera_get_view_height(_cam);
     
 	    // Calculate which cell the mouse is in
 	    var _cell_x = _mouse_x div _cell_size;
 	    var _cell_y = _mouse_y div _cell_size;
     
-	    // Check if the mouse is within the room bounds
-	    if (_mouse_x >= 0 && _mouse_x < room_width && _mouse_y >= 0 && _mouse_y < room_height) {
+	    // Check if the mouse is within the valid area of the current viewport
+	    var _mouse_view_y = _mouse_y - _view_y;
+	    if (_mouse_x >= 0 && _mouse_x < room_width && 
+	        _mouse_view_y >= 96 && _mouse_view_y < _view_height - 96) {
 	        // Draw a red square around the cell
 	        draw_set_color(c_red);
 	        draw_set_alpha(0.5);
@@ -86,7 +103,7 @@ function World(_ts) constructor {
     
 	function draw_grid_overlay(_draw_grid) {
 	    if (_draw_grid) {
-	        var _cell_size = 6 * _tile_size; // 96 pixels if _tile_size is 16
+	        var _cell_size = 6 * _tile_size;
         
 	        draw_set_alpha(.1);
         
