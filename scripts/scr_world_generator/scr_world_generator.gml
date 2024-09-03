@@ -7,6 +7,8 @@ function World(_ts) constructor {
     _tileset = spr_worldmap_tiles;
     _wave_up = false;
 	_noise_scale = 0.2;
+	_start_pos_x = 0;
+	_start_pos_y = 0;
     
     function init() {
         _grid_width = room_width div _tile_size;
@@ -31,6 +33,8 @@ function World(_ts) constructor {
     
         var _start_x = _random_cell_x * _cell_size;
         var _start_y = _random_cell_y * _cell_size;
+		_start_pos_x = _start_x;
+		_start_pos_y = _start_y;
     
         generate_chunk(_start_x, _start_y);
     }
@@ -118,8 +122,9 @@ function World(_ts) constructor {
                     var _autotile_index = get_autotile_index(_i, _j);
                     draw_sprite(_tileset, _autotile_index, round(_i * _tile_size + _tile_size / 2), round(_j * _tile_size + _tile_size / 2));
 					//show_message(_tile_info);
-					if(_tile_info.grass) {
-						 draw_sprite(_tileset, 24, round(_i * _tile_size + _tile_size / 2), round(_j * _tile_size + _tile_size / 2));
+					if(_tile_info.flower) {
+						var _grass_pos = (_wave_up) ? 24 : 25;
+						 //draw_sprite(_tileset, _grass_pos, round(_i * _tile_size + _tile_size / 2), round(_j * _tile_size + _tile_size / 2));
 					}
                 } else {
                     if (_j > 0 && _world_grid[# _i, _j-1] != noone) {
@@ -184,58 +189,117 @@ function World(_ts) constructor {
         return 14;
     }
 
-function generate_chunk(_start_x, _start_y) {
-    var _chunk_size = 6;
-    var _noise_seed = random(10000); // Random seed for varied chunks
+	function generate_chunk(_start_x, _start_y) {
+	    var _chunk_size = 6;
+	    var _noise_seed = random(10000); // Random seed for varied chunks
     
-    // Calculate the center of the chunk
-    var _center_x = _start_x + _chunk_size / 2;
-    var _center_y = _start_y + _chunk_size / 2;
-    
-    // First pass: Fill the entire chunk with land
-    for (var _i = 0; _i < _chunk_size; _i++) {
-        for (var _j = 0; _j < _chunk_size; _j++) {
-            var _grid_x = _start_x + _i;
-            var _grid_y = _start_y + _j;
+	    // Calculate the center of the chunk
+	    var _center_x = _start_x + _chunk_size / 2;
+	    var _center_y = _start_y + _chunk_size / 2;
+
+	    // First pass: Fill the entire chunk with land
+	    for (var _i = 0; _i < _chunk_size; _i++) {
+	        for (var _j = 0; _j < _chunk_size; _j++) {
+	            var _grid_x = _start_x + _i;
+	            var _grid_y = _start_y + _j;
             
-            _draw_grass_tile = random_range(1, 100) < 20;
-            _world_grid[# _grid_x, _grid_y] = {
-                type: "land",
-                grass: _draw_grass_tile,
-            };
-        }
-    }
+	            _draw_grass_tile = random_range(1, 100) < 20;
+				_draw_flower_tile = random_range(1, 100) < 10;
+	            _world_grid[# _grid_x, _grid_y] = {
+	                type: "land",
+	                grass: _draw_grass_tile,
+					flower: _draw_flower_tile,
+	            };
+	        }
+	    }
     
-    // Second pass: Create water only along the edges
-    for (var _i = 0; _i < _chunk_size; _i++) {
-        for (var _j = 0; _j < _chunk_size; _j++) {
-            var _grid_x = _start_x + _i;
-            var _grid_y = _start_y + _j;
+	    // Second pass: Create water only along the edges
+	    for (var _i = 0; _i < _chunk_size; _i++) {
+	        for (var _j = 0; _j < _chunk_size; _j++) {
+	            var _grid_x = _start_x + _i;
+	            var _grid_y = _start_y + _j;
             
-            // Check if we're on the edge of the chunk
-            if (_i == 0 || _i == _chunk_size - 1 || _j == 0 || _j == _chunk_size - 1) {
-                // Calculate distance from center
-                var _dist_from_center = point_distance(_grid_x, _grid_y, _center_x, _center_y) / (_chunk_size / 2);
+	            // Check if we're on the edge of the chunk
+	            if (_i == 0 || _i == _chunk_size - 1 || _j == 0 || _j == _chunk_size - 1) {
+	                // Calculate distance from center
+	                var _dist_from_center = point_distance(_grid_x, _grid_y, _center_x, _center_y) / (_chunk_size / 2);
                 
-                // Generate Perlin noise value
-                var _noise_x = (_grid_x + _noise_seed) * _noise_scale;
-                var _noise_y = (_grid_y + _noise_seed) * _noise_scale;
-                var _noise_value = (perlin_noise_2d(_noise_x, _noise_y) + 2) / 2; // Normalize to 0-1 range
+	                // Generate Perlin noise value
+	                var _noise_x = (_grid_x + _noise_seed) * _noise_scale;
+	                var _noise_y = (_grid_y + _noise_seed) * _noise_scale;
+	                var _noise_value = (perlin_noise_2d(_noise_x, _noise_y) + 2) / 2; // Normalize to 0-1 range
                 
-                // Combine distance and noise to determine land or water
-                var _land_value = _noise_value - _dist_from_center;
+	                // Combine distance and noise to determine land or water
+	                var _land_value = _noise_value - _dist_from_center;
                 
-                if (_land_value <= 0.1) { // Adjust this threshold to change coastline shape
-                    _world_grid[# _grid_x, _grid_y] = noone; // Water
-                }
-            }
-        }
-    }
+	                if (_land_value <= 0.1) { // Adjust this threshold to change coastline shape
+	                    _world_grid[# _grid_x, _grid_y] = noone; // Water
+	                }
+	            }
+	        }
+	    }
     
-    // Ensure the center is always land
-    _world_grid[# floor(_center_x), floor(_center_y)] = { type: "land", grass: false };
-}
+	    // Ensure the center is always land
+	    _world_grid[# floor(_center_x), floor(_center_y)] = { type: "land", grass: false, flower: false };
+		
+		spawn_trees_in_chunk(_start_x, _start_y);
+		spawn_rocks_in_chunk(_start_x, _start_y);
+	}
 	
+	function spawn_trees_in_chunk(_start_x, _start_y) {
+		for (var _c = _start_x * 16; _c < _start_x * 16 + 96; _c += 16) {
+		    for (var _r = (_start_y * 16) + 16; _r < _start_y * 16 + 96; _r += 16) {
+		        if (random(1) < .2) {
+		            var _grid_x = _c div 16;
+		            var _grid_y = _r div 16;
+            
+		            if (_world_grid[# _grid_x, _grid_y] != noone) {
+		                var _tile = _world_grid[# _grid_x, _grid_y];
+		                if (_tile.type == "land") {
+							if (!is_position_solid(_c, _r + 8)) {
+			                    instance_create_layer(_c, _r + 8, "Instances", obj_spawn_tree);
+							}
+		                }
+		            }
+		        }
+		    }
+		}
+	}
+	
+	function spawn_rocks_in_chunk(_start_x, _start_y) {
+		for (var _c = _start_x * 16; _c < _start_x * 16 + 96; _c += 16) {
+		    for (var _r = (_start_y * 16) + 16; _r < _start_y * 16 + 96; _r += 16) {
+		        if (random(1) < .1) {
+		            var _grid_x = _c div 16;
+		            var _grid_y = _r div 16;
+            
+		            if (_world_grid[# _grid_x, _grid_y] != noone) {
+		                var _tile = _world_grid[# _grid_x, _grid_y];
+		                if (_tile.type == "land") {
+							if (!is_position_solid(_c, _r + 8)) {
+			                    instance_create_layer(_c, _r + 8, "Instances", obj_spawn_rock);
+							}
+		                }
+		            }
+		        }
+		    }
+		}
+	}
+	
+	function is_position_solid(_x, _y) {
+	    var _solid_parent = obj_solid; // Assume you have a parent object for all solid objects
+    
+	    with (all) {
+	        if (object_is_ancestor(object_index, _solid_parent) || object_index == _solid_parent) {
+	            if (position_meeting(_x, _y, id)) {
+	                return true;
+	            }
+	        }
+	    }
+    
+		return false;
+	}
+
 	function perlin_noise_2d(_x, _y) {
 	    static p = array_create(512);
 	    static initialized = false;
