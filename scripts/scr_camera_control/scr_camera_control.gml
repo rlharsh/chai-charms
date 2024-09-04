@@ -1,9 +1,11 @@
+/// @desc Function Description
+/// @param {real} _room_number Description
 function change_view(_room_number) {
     var _cam = view_camera[0];
     
     // Define room dimensions
-    var _room_width = 576;
-    var _room_height = 384;
+    var _room_width = 840;
+    var _room_height = 360;
     
     // Calculate row and column
     var _row = _room_number div 10;  // Integer division to get row (0-3)
@@ -19,7 +21,5 @@ function change_view(_room_number) {
     // Optional: Update selected_room global variable
     selected_room = _room_number;
     
-    // Debug message
-    show_debug_message("Moved to room " + string(_room_number) + 
-                       " at position (" + string(_cam_x) + ", " + string(_cam_y) + ")");
+    set_current_map(selected_room);
 }

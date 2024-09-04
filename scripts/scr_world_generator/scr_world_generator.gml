@@ -9,6 +9,8 @@ function World(_ts) constructor {
 	_noise_scale = 0.2;
 	_start_pos_x = 0;
 	_start_pos_y = 0;
+	_maximum_map = 0;
+	_selected_map = 0;
     
     function init() {
         _grid_width = room_width div _tile_size;
@@ -24,7 +26,7 @@ function World(_ts) constructor {
     
 	function generate_world() {
         randomize();
-        var _cell_size = 6;
+        var _cell_size = 4;
         var _grid_cells_width = _grid_width div _cell_size;
         var _grid_cells_height = _grid_height div _cell_size;
     
@@ -36,11 +38,14 @@ function World(_ts) constructor {
 		_start_pos_x = _start_x;
 		_start_pos_y = _start_y;
     
-        generate_chunk(18, 6);
+        generate_chunk(16, 8);
+		generate_chunk(20, 8);
     }
 	
 	function update_world() {
-	    var _cell_size = 6 * _tile_size;
+		if (_selected_map > get_maximum_map()) return;
+		
+	    var _cell_size = 4 * _tile_size;
 	    var _mouse_x = mouse_x;
 	    var _mouse_y = mouse_y;
 
@@ -49,31 +54,34 @@ function World(_ts) constructor {
 	    var _view_x = camera_get_view_x(_cam);
 	    var _view_y = camera_get_view_y(_cam);
 	    var _view_height = camera_get_view_height(_cam);
+		var _camera_width = camera_get_view_width(view_camera[0]);
 
 	    var _cell_x = _mouse_x div _cell_size;
 	    var _cell_y = _mouse_y div _cell_size;
 
 	    // Check if the mouse is within the valid area of the current viewport
 	    var _mouse_view_y = _mouse_y - _view_y;
-	    if (_mouse_x >= 0 && _mouse_x < room_width && 
-	        _mouse_view_y >= 96 && _mouse_view_y < _view_height - 96) {
+	    if (_mouse_x >= 64 && _mouse_x < _view_x + _camera_width - 72 && 
+	        _mouse_view_y >= 64 && _mouse_view_y < _view_height - 40) {
 	        if (mouse_check_button_pressed(mb_left)) {
-	            var _start_x = _cell_x * 6;
-	            var _start_y = _cell_y * 6;
+	            var _start_x = _cell_x * 4;
+	            var _start_y = _cell_y * 4;
         
 	            generate_chunk(_start_x, _start_y);
 	        }
 	    }
 	}
     
-    function draw_world(_draw_grid) {
+    function draw_world(_draw_grid, _scale) {
         draw_grid_overlay(_draw_grid);
         draw_map_tiles();
-		draw_mouse_grid();
+		draw_mouse_grid(_scale);
     }
 	
-	function draw_mouse_grid() {
-	    var _cell_size = 6 * _tile_size;
+	function draw_mouse_grid(_scale) {
+		if (_selected_map > get_maximum_map()) return;
+		
+	    var _cell_size = 4 * _tile_size;
 	    var _mouse_x = mouse_x;
 	    var _mouse_y = mouse_y;
     
@@ -82,6 +90,9 @@ function World(_ts) constructor {
 	    var _view_x = camera_get_view_x(_cam);
 	    var _view_y = camera_get_view_y(_cam);
 	    var _view_height = camera_get_view_height(_cam);
+		
+		var _camera_width = camera_get_view_width(view_camera[0]);
+        var _camera_height = camera_get_view_height(view_camera[0]);
     
 	    // Calculate which cell the mouse is in
 	    var _cell_x = _mouse_x div _cell_size;
@@ -89,21 +100,15 @@ function World(_ts) constructor {
     
 	    // Check if the mouse is within the valid area of the current viewport
 	    var _mouse_view_y = _mouse_y - _view_y;
-	    if (_mouse_x >= 0 && _mouse_x < room_width && 
-	        _mouse_view_y >= 96 && _mouse_view_y < _view_height - 96) {
-	        // Draw a red square around the cell
-	        draw_set_color(c_red);
-	        draw_set_alpha(0.5);
-	        draw_rectangle(_cell_x * _cell_size, _cell_y * _cell_size, 
-	                       (_cell_x + 1) * _cell_size - 1, (_cell_y + 1) * _cell_size - 1, true);
-	        draw_set_alpha(1);
-	        draw_set_color(c_white);
+	    if (_mouse_x >= 64 && _mouse_x < _view_x + _camera_width - 72  && 
+	        _mouse_view_y >= 64 && _mouse_view_y < _view_height - 40) {
+			draw_sprite_ext(spr_selector, 0, _cell_x * _cell_size + 32, _cell_y * _cell_size + 32, _scale, _scale, 0, c_white, 1);
 	    }
 	}
     
 	function draw_grid_overlay(_draw_grid) {
 	    if (_draw_grid) {
-	        var _cell_size = 6 * _tile_size;
+	        var _cell_size = 4 * _tile_size;
         
 	        draw_set_alpha(.1);
         
@@ -207,7 +212,7 @@ function World(_ts) constructor {
     }
 
 	function generate_chunk(_start_x, _start_y) {
-	    var _chunk_size = 6;
+	    var _chunk_size = 4;
 	    var _noise_seed = random(10000); // Random seed for varied chunks
     
 	    // Calculate the center of the chunk

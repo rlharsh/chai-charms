@@ -39,12 +39,12 @@ function draw_text_outline(_x, _y, _text, _color = c_white, _scale = 1, _rotatio
         var _angle = _i * _angle_step;
         var _offset_x = lengthdir_x(_outline_width, _angle) * _scale;
         var _offset_y = lengthdir_y(_outline_width, _angle) * _scale;
-        draw_text_transformed(round(_x + _offset_x), round(_y + _offset_y), _text, _scale, _scale, _rotation);
+        draw_text_transformed(round(_x + _offset_x), round(_y + _offset_y), _text, round(_scale), round(_scale), round(_rotation));
     }
     
     // Draw the main text
     draw_set_color(_color);
-    draw_text_transformed(round(_x), round(_y), _text, _scale, _scale, _rotation);
+    draw_text_transformed(round(_x), round(_y), _text, round(_scale), round(_scale), round(_rotation));
     
     // Reset draw color and alpha
     draw_set_color(_prev_color);

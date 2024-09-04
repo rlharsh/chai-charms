@@ -1,1 +1,1 @@
-game_world.draw_world(false);
+game_world.draw_world(false, selector_scale.scale);

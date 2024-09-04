@@ -3,6 +3,11 @@ controllers = [{
 	controller_ref: -1,
 	controller_initialized: false,
 	name: "controller_gui",
+}, {
+	controller: obj_controller_aspect_manager,
+	controller_ref: -1,
+	controller_initialized: false,
+	name: "controller_aspect",
 }];
 
 array_foreach(controllers, function(_controller) {
