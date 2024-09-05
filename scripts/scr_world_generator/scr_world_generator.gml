@@ -11,6 +11,8 @@ function World(_ts) constructor {
 	_start_pos_y = 0;
 	_maximum_map = 0;
 	_selected_map = 0;
+	_build_mode = false;
+	
     
     function init() {
         _grid_width = room_width div _tile_size;
@@ -42,8 +44,24 @@ function World(_ts) constructor {
 		generate_chunk(20, 8);
     }
 	
+    function is_position_walkable(_x, _y) {
+        // Convert pixel coordinates to grid coordinates
+        var _grid_x = _x div _tile_size;
+        var _grid_y = _y div _tile_size;
+        
+        // Check if the coordinates are within the grid bounds
+        if (_grid_x < 0 || _grid_x >= _grid_width || _grid_y < 0 || _grid_y >= _grid_height) {
+            return false;
+        }
+        
+        // Check if the tile at this position is land (not water)
+        var _tile_info = _world_grid[# _grid_x, _grid_y];
+        return (_tile_info != noone && _tile_info.type == "land");
+    }
+	
 	function update_world() {
 		if (_selected_map > get_maximum_map()) return;
+		//if (!_build_mode) return;
 		
 	    var _cell_size = 4 * _tile_size;
 	    var _mouse_x = mouse_x;
@@ -80,6 +98,7 @@ function World(_ts) constructor {
 	
 	function draw_mouse_grid(_scale) {
 		if (_selected_map > get_maximum_map()) return;
+		//if (!_build_mode) return;
 		
 	    var _cell_size = 4 * _tile_size;
 	    var _mouse_x = mouse_x;
@@ -212,7 +231,16 @@ function World(_ts) constructor {
     }
 
 	function generate_chunk(_start_x, _start_y) {
-	    var _chunk_size = 4;
+		var _chunk_size = 4;
+
+/*
+		var  new_island = instance_create_layer(_start_x, _start_y, "Islands", obj_island_spawner);
+		new_island.x = _start_x * 16;
+		new_island.y = _start_y * 16;
+		
+		return;
+*/
+		
 	    var _noise_seed = random(10000); // Random seed for varied chunks
     
 	    // Calculate the center of the chunk
@@ -271,15 +299,15 @@ function World(_ts) constructor {
 	function spawn_trees_in_chunk(_start_x, _start_y) {
 		for (var _c = _start_x * 16; _c < _start_x * 16 + 96; _c += 16) {
 		    for (var _r = (_start_y * 16) + 16; _r < _start_y * 16 + 96; _r += 16) {
-		        if (random(1) < .2) {
+		        if (random(1) < .06) {
 		            var _grid_x = _c div 16;
 		            var _grid_y = _r div 16;
             
 		            if (_world_grid[# _grid_x, _grid_y] != noone) {
 		                var _tile = _world_grid[# _grid_x, _grid_y];
 		                if (_tile.type == "land") {
-							if (!is_position_solid(_c, _r + 8)) {
-			                    instance_create_layer(_c, _r + 8, "Instances", obj_spawn_tree);
+							if (!is_position_solid(_c - 16, _r + 8)) {
+			                    instance_create_layer(round(_c - 16), round(_r + 8), "Instances", obj_spawn_tree);
 							}
 		                }
 		            }
@@ -291,7 +319,7 @@ function World(_ts) constructor {
 	function spawn_rocks_in_chunk(_start_x, _start_y) {
 		for (var _c = _start_x * 16; _c < _start_x * 16 + 96; _c += 16) {
 		    for (var _r = (_start_y * 16) + 16; _r < _start_y * 16 + 96; _r += 16) {
-		        if (random(1) < .1) {
+		        if (random(1) < .05) {
 		            var _grid_x = _c div 16;
 		            var _grid_y = _r div 16;
             
@@ -299,7 +327,7 @@ function World(_ts) constructor {
 		                var _tile = _world_grid[# _grid_x, _grid_y];
 		                if (_tile.type == "land") {
 							if (!is_position_solid(_c, _r + 8)) {
-			                    instance_create_layer(_c, _r + 8, "Instances", obj_spawn_rock);
+			                    instance_create_layer(round(_c), round(_r + 8), "Instances", obj_spawn_rock);
 							}
 		                }
 		            }

@@ -20,7 +20,7 @@ if (keyboard_check_pressed(vk_left)) {
 }
 
 // Edge Scrolling for Multiple Screens
-var scroll_speed = 2;
+var scroll_speed = 1;
 var border_size = 32;
 var room_widths = 840;
 
@@ -36,27 +36,44 @@ var view_h = camera_get_view_height(view_camera[0]);
 var current_screen_start = (selected_room mod 10) * room_widths;
 var current_screen_end = current_screen_start + room_widths;
 
+// Calculate current screen boundaries
+var current_screen_start_x = (selected_room mod 10) * room_width;
+var current_screen_end_x = current_screen_start_x + room_width;
+var current_screen_start_y = floor(selected_room / 10) * room_height;
+var current_screen_end_y = current_screen_start_y + room_height;
+
 // Right edge scrolling
-if (mouse_x > cam_x + view_w - border_size) {
+if (mouse_x > cam_x + view_w - border_size || keyboard_check(ord("D"))) {
     var new_cam_x = min(cam_x + scroll_speed, current_screen_end - view_w);
     if (new_cam_x != cam_x) {
         cam_x = new_cam_x;
-        camera_set_view_pos(view_camera[0], cam_x, cam_y);
+        camera_set_view_pos(view_camera[0], round(cam_x), round(cam_y));
     }
 }
 
 // Left edge scrolling
-if (mouse_x < cam_x + border_size) {
+if (mouse_x < cam_x + border_size || keyboard_check(ord("A"))) {
     var new_cam_x = max(cam_x - scroll_speed, current_screen_start);
     if (new_cam_x != cam_x) {
         cam_x = new_cam_x;
-        camera_set_view_pos(view_camera[0], cam_x, cam_y);
-    } else if (cam_x <= current_screen_start && selected_room > 0) {
-        // Move to previous screen
-        //selected_room--;
-        //change_view(selected_room);
-        // Set camera to the right edge of the new screen
-        //cam_x = (selected_room mod 10) * room_widths + room_widths - view_w;
-        //camera_set_view_pos(view_camera[0], cam_x, cam_y);
+        camera_set_view_pos(view_camera[0], round(cam_x), round(cam_y));
+    }
+}
+
+// Down edge scrolling
+if (mouse_y > cam_y + view_h - border_size || keyboard_check(ord("S"))) {
+    var new_cam_y = min(cam_y + scroll_speed, current_screen_end_y - view_h);
+    if (new_cam_y != cam_y) {
+        cam_y = new_cam_y;
+        camera_set_view_pos(view_camera[0], round(cam_x), round(cam_y));
+    }
+}
+
+// Up edge scrolling
+if (mouse_y < cam_y + border_size || keyboard_check(ord("W"))) {
+    var new_cam_y = max(cam_y - scroll_speed, current_screen_start_y);
+    if (new_cam_y != cam_y) {
+        cam_y = new_cam_y;
+        camera_set_view_pos(view_camera[0], round(cam_x), round(cam_y));
     }
 }

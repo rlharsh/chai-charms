@@ -1,4 +1,4 @@
-display_set_gui_size(640, 360);
+//display_set_gui_size(640, 360);
 
 initialized = false;
 

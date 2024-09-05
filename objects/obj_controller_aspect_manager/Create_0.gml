@@ -17,3 +17,5 @@ is_full_screen = window_get_fullscreen();
 
 RESIZE_APP_SURFACE;
 RESIZE_WINDOW;
+
+game_set_speed(100, gamespeed_fps);

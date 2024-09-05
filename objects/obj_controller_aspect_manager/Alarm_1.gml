@@ -1,9 +1,9 @@
 /// @description resize_window && app surface (when not in fullscreen)
 surface_resize(application_surface,
-							 current_width*sub_pixel_scale,
-							 current_height*sub_pixel_scale);
-display_set_gui_size(current_width*gui_scale,
-									   current_height*gui_scale);
+							 round(current_width*sub_pixel_scale),
+							 round(current_height*sub_pixel_scale));
+display_set_gui_size(round(current_width*gui_scale),
+									   round(current_height*gui_scale));
 
 if(!window_get_fullscreen())
 {	//We aren't in full screen, 
