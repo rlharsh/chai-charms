@@ -35,6 +35,7 @@ function set_aspect(argument0) {
 		}
 	
 		//instance_create_depth(0,0,-1000,obj_screen_fade);
+		RESIZE_APP_SURFACE;
 		RESIZE_WINDOW;
 	}
 

@@ -13,12 +13,18 @@ var main_menu_group = new gui_group("main_menu", [
 	}),
 	new gui_button(4, display_get_gui_height() - 70, "MODS"),
 	new gui_button(4, display_get_gui_height() - 50, "Discord", function() {
-		url_open("https://www.google.com/");	
+		url_open("https://discord.gg/6c6rCfGa9P");	
 	}),
 	new gui_button(4, display_get_gui_height() - 30, "Quit", function() {
 		game_end(0);	
 	}),
 ]);
+
+var logos = new gui_group("gui_logos", [
+	new gui_sprite(display_get_gui_width() - 20, display_get_gui_height() - 20, spr_ui_icons, 0)
+]);
+
+menu_options.add_persistent_group(logos);
 
 var hud_group = new gui_group("hud", [
     // Add HUD elements here

@@ -11,7 +11,4 @@ if(!window_get_fullscreen())
 	CENTER_WINDOW;
 }
 
-// ui_element_update_positions();	
-
-
-
+// ui_element_update_positions();

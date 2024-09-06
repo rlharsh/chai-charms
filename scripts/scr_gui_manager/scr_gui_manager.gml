@@ -4,6 +4,7 @@
 function gui_manager_create(_player_index = 0) constructor {
 	
 	pages = {};
+	persistent_groups = [];
 	current_page = "";
 	cursor_instance = -1;
 	
@@ -38,6 +39,10 @@ function gui_manager_create(_player_index = 0) constructor {
 		}
 	}
 	
+	add_persistent_group = function(_group) {
+		array_push(persistent_groups, _group);	
+	}
+	
 	load_page = function(_name) {
 		if (variable_struct_exists(pages, _name)) {
 			current_page = _name;	
@@ -46,7 +51,25 @@ function gui_manager_create(_player_index = 0) constructor {
 		}
 	}
 	
+	update_positions = function() {
+		
+		for (var _i = 0; _i < array_length(persistent_groups); _i++) {
+			persistent_groups[_i].update_positions();	
+		}
+		
+		if (current_page != "") {
+			var current_groups = pages[$ current_page];
+			for (var _i = 0; _i < array_length(current_groups); _i++) {
+				current_groups[_i].update_positions();	
+			}
+		}
+	}
+	
 	draw = function() {
+		for (var _i = 0; _i < array_length(persistent_groups); _i++) {
+			persistent_groups[_i].draw();	
+		}
+		
 		if (current_page != "") {
 			var current_groups = pages[$ current_page];
 			for (var _i = 0; _i < array_length(current_groups); _i++) {
@@ -56,6 +79,12 @@ function gui_manager_create(_player_index = 0) constructor {
 	}
 	
 	step = function() {
+		update_positions();
+		
+		for (var _i = 0; _i < array_length(persistent_groups); _i++) {
+			persistent_groups[_i].step();	
+		}
+		
 		if (current_page != "") {
 			var current_groups = pages[$ current_page];
 			for (var _i = 0; _i < array_length(current_groups); _i++) {
@@ -71,6 +100,14 @@ function gui_group(_name, _elements = []) constructor {
 	
 	add_element = function(_element) {
 		array_push(elements, _element);	
+	}
+	
+	update_positions = function() {
+		for (var _i = 0; _i < array_length(elements); _i++) {
+			if (variable_struct_exists(elements[_i], "update_position")) {
+				elements[_i].update_position();	
+			}
+		}
 	}
 	
 	draw = function() {
@@ -133,6 +170,29 @@ function gui_selector(_x, _y, _options = [], _callback = undefined) constructor 
 	}
 }
 
+function gui_sprite(_x, _y, _sprite_index, _image_index) constructor {
+	xx = _x;
+	yy = _y;
+	s_index = _sprite_index;
+	i_index = _image_index;
+	
+	x_percent = _x / display_get_gui_width();
+    y_percent = _y / display_get_gui_height();
+	
+    update_position = function() {
+        xx = x_percent * display_get_gui_width();
+        yy = y_percent * display_get_gui_height();
+    }
+	
+	draw = function() {
+		draw_sprite(s_index, i_index, xx, yy);
+	}
+	
+	step = function() {
+		
+	}
+}
+
 function gui_button(_x, _y, _text, _callback = undefined, _sprite_index = spr_ui_button_default, _height = -1, _width = -1, _centered = false) constructor {
 	text = _text;
 	xx = _x;
@@ -142,6 +202,14 @@ function gui_button(_x, _y, _text, _callback = undefined, _sprite_index = spr_ui
 	height = (_height == -1) ? string_height(_text) + 8 : _height;
 	s_index = _sprite_index;
 	centered = _centered;
+	
+	x_percent = _x / display_get_gui_width();
+    y_percent = _y / display_get_gui_height();
+	
+    update_position = function() {
+        xx = x_percent * display_get_gui_width();
+        yy = y_percent * display_get_gui_height();
+    }
 	
 	if (centered) {
 		xx -= width / 2;	
