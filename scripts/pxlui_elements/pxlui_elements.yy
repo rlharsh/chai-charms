@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"pxlui_elements",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"pxlui_elements",
+  "parent":{
+    "name":"PXLUI",
+    "path":"folders/PXLUI.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

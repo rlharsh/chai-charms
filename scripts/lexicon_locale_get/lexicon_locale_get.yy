@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"lexicon_locale_get",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"lexicon_locale_get",
+  "parent":{
+    "name":"Language",
+    "path":"folders/libs/Lexicon/Language.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

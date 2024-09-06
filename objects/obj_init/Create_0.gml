@@ -19,4 +19,4 @@ array_foreach(controllers, function(_controller) {
 	}
 });
 
-room_goto(rm_world_generation);
+room_goto(rm_menu_main);
