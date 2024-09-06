@@ -13,7 +13,7 @@
   "overriddenProperties":[],
   "parent":{
     "name":"generators",
-    "path":"folders/Objects/generators.yy",
+    "path":"folders/objects/generators.yy",
   },
   "parentObjectId":null,
   "persistent":false,

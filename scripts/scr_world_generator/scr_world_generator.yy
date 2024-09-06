@@ -6,7 +6,7 @@
   "name":"scr_world_generator",
   "parent":{
     "name":"world_generation",
-    "path":"folders/Scripts/world_generation.yy",
+    "path":"folders/scripts/world_generation.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

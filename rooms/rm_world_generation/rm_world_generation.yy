@@ -24,7 +24,7 @@
   "name":"rm_world_generation",
   "parent":{
     "name":"testing",
-    "path":"folders/Rooms/testing.yy",
+    "path":"folders/rooms/testing.yy",
   },
   "parentRoom":null,
   "physicsSettings":{

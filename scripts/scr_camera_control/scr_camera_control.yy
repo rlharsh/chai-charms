@@ -6,7 +6,7 @@
   "name":"scr_camera_control",
   "parent":{
     "name":"camera_control",
-    "path":"folders/Scripts/camera_control.yy",
+    "path":"folders/scripts/camera_control.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

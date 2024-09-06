@@ -9,7 +9,7 @@
   "overriddenProperties":[],
   "parent":{
     "name":"env",
-    "path":"folders/Objects/env.yy",
+    "path":"folders/objects/env.yy",
   },
   "parentObjectId":{
     "name":"obj_solid",

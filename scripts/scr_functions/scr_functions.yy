@@ -6,7 +6,7 @@
   "name":"scr_functions",
   "parent":{
     "name":"helpers",
-    "path":"folders/Scripts/helpers.yy",
+    "path":"folders/scripts/helpers.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

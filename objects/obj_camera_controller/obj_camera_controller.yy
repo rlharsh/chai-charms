@@ -11,7 +11,7 @@
   "overriddenProperties":[],
   "parent":{
     "name":"game",
-    "path":"folders/Objects/controllers/game.yy",
+    "path":"folders/objects/controllers/game.yy",
   },
   "parentObjectId":null,
   "persistent":false,

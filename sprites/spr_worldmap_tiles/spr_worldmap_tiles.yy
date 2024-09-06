@@ -57,7 +57,7 @@
   "origin":4,
   "parent":{
     "name":"environment",
-    "path":"folders/Sprites/environment.yy",
+    "path":"folders/sprites/environment.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

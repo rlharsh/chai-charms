@@ -121,7 +121,7 @@
   "origin":0,
   "parent":{
     "name":"sprite_fonts",
-    "path":"folders/Sprites/sprite_fonts.yy",
+    "path":"folders/sprites/sprite_fonts.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",
