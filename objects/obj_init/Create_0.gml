@@ -8,6 +8,11 @@ controllers = [{
 	controller_ref: -1,
 	controller_initialized: false,
 	name: "controller_aspect",
+}, {
+	controller: obj_controller_configuration,
+	controller_ref: -1,
+	controller_initialized: false,
+	name: "controller_configuration",
 }];
 
 array_foreach(controllers, function(_controller) {

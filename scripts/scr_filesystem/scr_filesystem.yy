@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_filesystem",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_filesystem",
+  "parent":{
+    "name":"filesystem",
+    "path":"folders/scripts/filesystem.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
