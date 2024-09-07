@@ -123,15 +123,25 @@ function gui_group(_name, _elements = []) constructor {
 	}
 }
 
-function gui_selector(_x, _y, _options = [], _callback = undefined) constructor {
+function gui_selector(_x, _y, _title = "", _options = [], _callback = undefined, _default_value = 0) constructor {
 	xx = _x;
 	yy = _y;
 	options = _options;
 	callback = _callback;
 	selected_index = 0;
+	default_value = _default_value;
 	
 	_s_width = string_width("superdaddy");
 	_t_width = 32 + 4 + _s_width;
+	
+    if (_default_value != undefined) {
+        for (var i = 0; i < array_length(options); i++) {
+            if (options[i] == _default_value) {
+                selected_index = i;
+                break;
+            }
+        }
+    }
 	
 	left_button = new gui_button(xx, yy, " -", function() {
 		if (selected_index - 1 > -1) {
@@ -193,6 +203,28 @@ function gui_sprite(_x, _y, _sprite_index, _image_index) constructor {
 	}
 }
 
+function gui_label(_x, _y, _text) constructor {
+	xx = _x;
+	yy = _y;
+	text = _text;
+	
+	x_percent = _x / display_get_gui_width();
+	y_percent = _y / display_get_gui_height();
+	
+	update_position = function() {
+		xx = x_percent * display_get_gui_width();
+		yy = y_percent * display_get_gui_height();
+	}
+	
+	draw = function() {
+		draw_text(xx, yy, text);
+	}
+	
+	step = function() {
+		
+	}
+}
+
 function gui_button(_x, _y, _text, _callback = undefined, _sprite_index = spr_ui_button_default, _height = -1, _width = -1, _centered = false) constructor {
 	text = _text;
 	xx = _x;
@@ -239,4 +271,14 @@ function gui_button(_x, _y, _text, _callback = undefined, _sprite_index = spr_ui
 			}
 		}
 	}
+}
+
+function get_zero_to_one_hundred() {
+    var _new_array = [];
+    
+    for (var _i = 0; _i <= 100; _i += 1) {
+        array_push(_new_array, _i);
+    }
+    
+    return _new_array;
 }

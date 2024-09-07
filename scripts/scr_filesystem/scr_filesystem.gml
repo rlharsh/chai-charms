@@ -58,6 +58,41 @@ function configuration_manager() constructor {
         
         show_debug_message("Configuration saved to: " + full_path);
     }
+	
+	get_value = function(_key) {
+		var keys = string_split(_key, ".");
+		var current = config_data;
+		
+		for (var _i = 0; _i < array_length(keys) - 1; _i++) {
+			if (!variable_struct_exists(current, keys[_i])) {
+				show_debug_message("Key not found: " + keys[_i]);
+				return false;
+			}
+			current = current[$ keys[_i]];
+		}
+		var last_key = keys[array_length(keys) - 1];
+		return current[$ last_key];
+	}
+	
+	update_value = function(_key, _value) {
+        var keys = string_split(_key, ".");
+        var current = config_data;
+        
+        for (var i = 0; i < array_length(keys) - 1; i++) {
+            if (!variable_struct_exists(current, keys[i])) {
+                show_debug_message("Key not found: " + keys[i]);
+                return false;
+            }
+            current = current[$ keys[i]];
+        }
+        
+        var last_key = keys[array_length(keys) - 1];
+        current[$ last_key] = _value;
+        
+        save_config_file();
+        refresh_configuration();
+        return true;
+    }
     
     build_configuration = function() {
         config_data = {
@@ -84,4 +119,18 @@ function sanitize_directory(_dir) {
         }
     }
     return true;
+}
+
+function configuration_update_value(_key, _value) {
+    if (instance_exists(obj_controller_configuration)) {
+        return obj_controller_configuration.config_manager.update_value(_key, _value);
+    }
+    return false;
+}
+
+function configuration_get_value(_key) {
+    if (instance_exists(obj_controller_configuration)) {
+        return obj_controller_configuration.config_manager.get_value(_key);
+    }
+    return undefined;
 }
