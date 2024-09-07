@@ -1,4 +1,4 @@
-/// @desc Function Description
+/// @desc Function to change the view on the camera
 /// @param {real} _room_number Description
 function change_view(_room_number) {
     var _cam = view_camera[0];
