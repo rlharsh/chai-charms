@@ -143,6 +143,10 @@ function gui_selector(_x, _y, _title = "", _options = [], _callback = undefined,
         }
     }
 	
+	if (_default_value != undefined) {
+		selected_index = _default_value;	
+	}
+	
 	left_button = new gui_button(xx, yy, " -", function() {
 		if (selected_index - 1 > -1) {
 			selected_index--;
@@ -195,7 +199,32 @@ function gui_sprite(_x, _y, _sprite_index, _image_index) constructor {
     }
 	
 	draw = function() {
-		draw_sprite(s_index, i_index, xx, yy);
+		draw_sprite(s_index, i_index, round(xx), round(yy));
+	}
+	
+	step = function() {
+		
+	}
+}
+
+function gui_sprite_stretched(_x, _y, _sprite_index, _image_index, _width, _height) constructor {
+	xx = _x;
+	yy = _y;
+	s_index = _sprite_index;
+	i_index = _image_index;
+	width = _width;
+	height = _height;
+	
+	x_percent = _x / display_get_gui_width();
+    y_percent = _y / display_get_gui_height();
+	
+    update_position = function() {
+        xx = x_percent * display_get_gui_width();
+        yy = y_percent * display_get_gui_height();
+    }
+	
+	draw = function() {
+		draw_sprite_stretched(s_index, i_index, round(xx), round(yy), round(width), round(height));
 	}
 	
 	step = function() {
@@ -217,7 +246,38 @@ function gui_label(_x, _y, _text) constructor {
 	}
 	
 	draw = function() {
+		draw_set_color(c_black);
 		draw_text(xx, yy, text);
+		draw_set_color(c_white);
+	}
+	
+	step = function() {
+		
+	}
+}
+
+function gui_label_shadow(_x, _y, _text, _centered = false) constructor {
+	xx = _x;
+	yy = _y;
+	text = _text;
+	centered = _centered;
+	
+	x_percent = _x / display_get_gui_width();
+	y_percent = _y / display_get_gui_height();
+	
+	update_position = function() {
+		xx = x_percent * display_get_gui_width();
+		yy = y_percent * display_get_gui_height();
+	}
+	
+	draw = function() {
+		if (centered) {
+			draw_set_halign(fa_center);	
+		}
+		draw_set_color(c_black);
+		draw_text_shadow(round(xx), round(yy), text, c_black);
+		draw_set_color(c_white);
+		draw_set_halign(fa_left);
 	}
 	
 	step = function() {
@@ -256,7 +316,7 @@ function gui_button(_x, _y, _text, _callback = undefined, _sprite_index = spr_ui
 		draw_set_halign(fa_center);
 		draw_set_valign(fa_middle);
 		draw_set_color(colour);
-		draw_text(round(xx + width / 2), round(yy + height / 2), text);
+		draw_text_shadow(round(xx + width / 2), round(yy + height / 2), text);
 		draw_set_color(c_white);
 		draw_set_halign(fa_left);
 		draw_set_valign(fa_top);

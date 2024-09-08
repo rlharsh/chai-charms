@@ -38,6 +38,4 @@ function set_aspect(argument0) {
 		RESIZE_APP_SURFACE;
 		RESIZE_WINDOW;
 	}
-
-
 }

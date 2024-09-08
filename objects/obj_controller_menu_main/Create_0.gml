@@ -3,7 +3,7 @@ menu_options = new gui_manager_create(0);
 // Create groups
 var main_menu_group = new gui_group("main_menu", [
     new gui_button(4, display_get_gui_height() - 130, "Start Game", function() {
-        // Play game logic
+        room_goto(rm_menu_select_save_file);
     }),
     new gui_button(4, display_get_gui_height() - 110, "Join Game", function() {
         menu_options.load_page("options_screen");
@@ -81,10 +81,10 @@ menu_options.add_page("options_video", [
 		}),
 		new gui_label(4, display_get_gui_height() - 50, "Fullscreen"),
 		new gui_label(4, display_get_gui_height() - 70, "Aspect Ratio"),
-		new gui_selector(140, display_get_gui_height() - 54, "Fullscreen", [0, 1], function(_val) {
+		new gui_selector(140, display_get_gui_height() - 54, "Fullscreen", ["False", "True"], function(_val) {
 			configuration_update_value("video.fullscreen", _val);
 		}, configuration_get_value("video.fullscreen")),
-		new gui_selector(140, display_get_gui_height() - 74, "Aspect", [0, 1, 2, 3], function(_val) {
+		new gui_selector(140, display_get_gui_height() - 74, "Aspect", ["16x9", "21x9", "1x1", "4x3", "9x16"], function(_val) {
 			configuration_update_value("video.aspect_ratio", _val);
 		}, configuration_get_value("video.aspect_ratio")),
 	])
