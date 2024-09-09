@@ -2,22 +2,24 @@ menu_options = new gui_manager_create(0);
 
 // Create groups
 var main_menu_group = new gui_group("main_menu", [
-    new gui_button(4, display_get_gui_height() - 130, "Start Game", function() {
+    new gui_button(display_get_gui_width() / 2, display_get_gui_height() - 130, "Continue", function() {
         room_goto(rm_menu_select_save_file);
-    }),
-    new gui_button(4, display_get_gui_height() - 110, "Join Game", function() {
+    },,,100,GUI_ALIGN.CENTER),
+    new gui_button(display_get_gui_width() / 2, display_get_gui_height() - 110, "New Game", function() {
         menu_options.load_page("options_screen");
-	}),
-	new gui_button(4, display_get_gui_height() - 90, "Settings", function() {
+	},,,100,GUI_ALIGN.CENTER),
+	new gui_button(display_get_gui_width() / 2, display_get_gui_height() - 90, "Load Game", function() {
 		menu_options.load_page("options_screen");	
-	}),
-	new gui_button(4, display_get_gui_height() - 70, "MODS"),
-	new gui_button(4, display_get_gui_height() - 50, "Discord", function() {
+	},,,100,GUI_ALIGN.CENTER),
+	new gui_button(display_get_gui_width() / 2, display_get_gui_height() - 70, "Multiplayer", function() {
+		
+	},,,100,GUI_ALIGN.CENTER),
+	new gui_button(display_get_gui_width() / 2, display_get_gui_height() - 50, "Settings", function() {
 		url_open("https://discord.gg/6c6rCfGa9P");	
-	}),
-	new gui_button(4, display_get_gui_height() - 30, "Quit", function() {
+	},,,100,GUI_ALIGN.CENTER),
+	new gui_button(display_get_gui_width() / 2, display_get_gui_height() - 30, "Exit", function() {
 		game_end(0);	
-	}),
+	},,,100,GUI_ALIGN.CENTER),
 ]);
 
 var logos = new gui_group("gui_logos", [

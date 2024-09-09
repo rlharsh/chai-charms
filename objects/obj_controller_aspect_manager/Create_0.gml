@@ -1,6 +1,6 @@
 #macro CAM view_camera[0]
-#macro BASE_WIDTH 640
-#macro BASE_HEIGHT 360
+#macro BASE_WIDTH 480
+#macro BASE_HEIGHT 270
 
 current_width = BASE_WIDTH
 current_height = BASE_HEIGHT

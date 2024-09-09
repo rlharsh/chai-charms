@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_save_file_manager",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_save_file_manager",
+  "parent":{
+    "name":"save_file_manager",
+    "path":"folders/components/save_file_manager.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

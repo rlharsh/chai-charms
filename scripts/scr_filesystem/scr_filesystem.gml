@@ -46,7 +46,7 @@ function configuration_manager() constructor {
     }
     
     refresh_configuration = function() {
-		set_aspect(config_data.video.aspect_ratio);
+		//set_aspect(config_data.video.aspect_ratio);
 		window_set_fullscreen(config_data.video.fullscreen);
     }
     
